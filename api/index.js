@@ -3,6 +3,8 @@ import { client } from "./postgresqldb.js";
 
 const app = express();
 
+app.use(express.static("public"))
+
 // Midlleware
 
 app.use((req, _res, next) => {
