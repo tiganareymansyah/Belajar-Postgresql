@@ -3,7 +3,7 @@ import postgresql from "pg";
 const { Client } = postgresql;
 
 export const client = new Client({
-    host: "db.ojgrbqsjzthxzphlyklm.supabase.co",
+    host: "db.lvrenfhzihvosjxjoidy.supabase.co",
     user: "postgres",
     password: "belajarpostgresql",
     database: "postgres"
