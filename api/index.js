@@ -28,10 +28,6 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 // Route
-app.get("/api/getpg", async (_req, res) => {
-    res.send((await client.query("SELECT * FROM mahasiswa")).rows);
-});
-
 app.get("/api/get/:a/:b", async (req, res) => {
     res.send(req.params);
 });
@@ -39,6 +35,10 @@ app.get("/api/get/:a/:b", async (req, res) => {
 app.get("/api/get/:nim", async (req, res) => {
     const result = await client.query(`SELECT * FROM mahasiswa WHERE nim = '${req.params.nim}'`);
     res.send(result.rows[0]);
+});
+
+app.get("/api/getpg", async (_req, res) => {
+    res.send((await client.query("SELECT * FROM mahasiswa")).rows);
 });
 
 app.post("/api/post", (req, res) => {
