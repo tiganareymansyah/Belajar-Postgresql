@@ -1,9 +1,16 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import { client } from "./postgresqldb.js";
 
-const app = express();
+import jwt from "jsonwebtoken";
 
-app.use(express.static("public"))
+const app = express();
+app.use(express.static("public"));
+
+// Membuat supaya bisa baca json
+app.use(express.json());
 
 // Midlleware
 // app.use((req, _res, next) => {
@@ -12,6 +19,25 @@ app.use(express.static("public"))
 //     }
 //     next();
 // });
+
+// Route token
+app.post("/api/token", async (req, res) => {
+    const result = await client.query(`SELECT * FROM mahasiswa WHERE nim = '${req.body.nim}'`)
+    if(result.rows.length > 0) {
+        if(req.body.nim === result.rows[0].nim) {
+            const token = jwt.sign(result.rows[0], process.env.JWT_SECRET_KEY);
+            res.send(token);
+        }
+        else {
+            res.status(401);
+            res.send("Nim salah");
+        }
+    }
+    else {
+        res.status(401);
+        res.send("Mahasiswa tidak ditemukan");
+    }
+});
 
 // JWT
 app.use((req, res, next) => {
@@ -23,9 +49,6 @@ app.use((req, res, next) => {
         res.send("Token salah");
     }
 });
-
-// Membuat supaya bisa baca json
-app.use(express.json());
 
 // Route
 app.get("/api/get/:a/:b", async (req, res) => {
