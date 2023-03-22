@@ -6,23 +6,25 @@ import { client } from "./postgresqldb.js";
 
 import jwt from "jsonwebtoken";
 
-const app = express();
-app.use(express.static("public"));
+import cookieParser from "cookie-parser";
 
-// Membuat supaya bisa baca json
+import bcrypt from "bcryptjs";
+
+const app = express();
+
+// Middleware untuk membaca body yang berformat JSON
 app.use(express.json());
 
-// Midlleware
-// app.use((req, _res, next) => {
-//     if(req.url === "/api/getpg") {
-//         console.log("Silahkan Masuk");
-//     }
-//     next();
-// });
+// middleware untuk mengelola cookie
+app.use(cookieParser());
+
+// middleware untuk mengakses file statis
+app.use(express.static("public"));
 
 // Route token
+// Login
 app.post("/api/token", async (req, res) => {
-    const result = await client.query(`SELECT * FROM mahasiswa WHERE nim = '${req.body.nim}'`)
+    const result = await client.query(`SELECT * FROM mahasiswa WHERE nim = '${req.body.nim}'`);
     if(result.rows.length > 0) {
         if(req.body.nim === result.rows[0].nim) {
             const token = jwt.sign(result.rows[0], process.env.JWT_SECRET_KEY);
@@ -39,7 +41,7 @@ app.post("/api/token", async (req, res) => {
     }
 });
 
-// JWT
+// middleware untuk mengotentikasi pengguna
 app.use((req, res, next) => {
     if(req.headers.authorization === "Bearer abcd") {
         next();
