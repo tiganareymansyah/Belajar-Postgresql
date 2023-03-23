@@ -4,53 +4,25 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="../assets/style.css">
     <title>Document</title>
 </head>
 <body>
-    <div class="div-container">
-        <div class="div-judul">
-            <h1>Tugas 5 Tigana Reymansyah</h1>
-        </div>
-        <div class="div-form">
-            <fieldset>
-                <form name="login">
-                    <h3>Selamat Datang</h3>
-                    <label>Username : </label>
-                    <input type="text" name="username" placeholder="Username">
-                    <label>Password : </label>
-                    <input type="text" name="password_" placeholder="Password">
-                    <div class="div-button">
-                        <button>Login</button>
-                    </div>
-                </form>
-            </fieldset>
-        </div>
-    </div>
+    <button class="logout">Logout</button>
     <script>
-        document.login.onsubmit = (event) => {
+        document.querySelector(".logout").onclick = async (event) => {
             event.preventDefault();
-            const username = document.login.username.value;
-            const password_ = document.login.password_.value;
-            fetch("/api/login", {
+            await fetch("/api/deletetoken", {
                 method: "POST",
                 headers: {
-                    "Content-type" : "application/json"
+                    "Content-type": "application/json"
                 },
                 body: JSON.stringify({
-                    username,
-                    password_
+                    token: "token"
                 })
-            }).then(async(response) => {
-                if(response.ok) {
-                    
-                }
-                else {
-                    const message = await response.text();
-                    alert(message);
-                }
-            })
-        }
+            });
+            location.href = "/";
+        };
     </script>
 </body>
 </html>
